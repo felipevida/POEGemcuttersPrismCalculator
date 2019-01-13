@@ -141,7 +141,10 @@ public class GemCalculatorMod
 			// RETURN THE BEST RESULT
 			return checkBestRemoveGemsCombination( 0, removeGems, new ArrayList<>() );
 		}
-
+		
+		if ( prismsTotal > 0)
+			return "You are missing " + (40 - qualityTotal) + "% quality to complete another prism.";
+		
 		return "You are missing " + (40 - qualityTotal) + "% quality.";
 	}
 
@@ -185,7 +188,6 @@ public class GemCalculatorMod
 					else if ( sumTotal > extraQuality )
 						break;
 				}
-
 
 				if (!complete)
 				{
@@ -306,7 +308,7 @@ public class GemCalculatorMod
 		int input = 0;
 		int size = 0;
 		boolean done = true;
-	
+
 		System.out.println("Welcome com POE Gemscutter's Prism Calculator: ");
 		System.out.print("Enter how many gems you have:");
 		size = in.nextInt();
@@ -316,7 +318,7 @@ public class GemCalculatorMod
 		{
 			System.out.print("Quality Gem #" +counter+ ": ");
 			input = in.nextInt();
-			calc.addQualityGems(input);
+			calc.addQualityGems( input );
 			counter++;
 		}
 		while(counter<=size);
@@ -328,9 +330,9 @@ public class GemCalculatorMod
 		calc.takeTwentyQualityGemsOut();
 		calc.calculateGemsQualityTotal();
 
-		System.out.println(calc.calculatePrismsTotal());
+		System.out.println( calc.calculatePrismsTotal() );
 
-		System.out.println(calc.getGemsToRemove());
+		System.out.println( calc.getGemsToRemove() );
 	}
 
 
