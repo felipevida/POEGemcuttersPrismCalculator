@@ -6,7 +6,7 @@ public class GemCalculatorMod
 {
 	private ArrayList<Integer> 
 	qualityGems, 		// receives input from user.
-	removeGems,			// receives gems that can be taken out of the trade based on extraQuality, if any.
+	removeGems,		// receives gems that can be taken out of the trade based on extraQuality, if any.
 	twentyQualityGems;	// takes all 20% Gems from qualityGems<>.
 
 
@@ -17,8 +17,8 @@ public class GemCalculatorMod
 
 	public GemCalculatorMod()
 	{
-		qualityGems			= new ArrayList<>();
-		removeGems			= new ArrayList<>();
+		qualityGems		= new ArrayList<>();
+		removeGems		= new ArrayList<>();
 		twentyQualityGems	= new ArrayList<>();
 
 		qualityTotal = prismsTotal = 0;
