@@ -38,15 +38,15 @@ public class GemCalculatorMod
 	}
 
 	/**
-	 * Takes all 20% quality gems to add to prismsTotal.
+	 * Takes all 20% quality gems and add to prismsTotal.
 	 */
-	public void getTwentyQualityGems()
+	public void takeTwentyQualityGemsOut()
 	{
 		for (int i = qualityGems.size()-1 ; i >= 0; i--)
 		{
-			if ( ( (Integer) qualityGems.get( i ) ) == 20 )
+			if ( qualityGems.get( i ).intValue() == 20 )
 			{
-				twentyQualityGems.add( (Integer) qualityGems.get(i) );
+				twentyQualityGems.add( qualityGems.get(i).intValue() );
 				qualityGems.remove( i );
 			}
 			else
@@ -85,7 +85,7 @@ public class GemCalculatorMod
 
 		prismsTotal += twentyQualityGems.size();
 
-		return "You have " + prismsTotal + " Gemscutter's Prism(s)";
+		return + prismsTotal + " Gemscutter's Prism(s).";
 	}
 
 	/**
@@ -108,10 +108,11 @@ public class GemCalculatorMod
 			}
 
 			// CHECK IF THE LAST removeGem value is = extraQuality
-			if ( removeGems.get(removeGems.size()-1).intValue() == extraQuality)
-			{
-				return "Remove " + extraQuality + "% from trade.";
-			}
+			if ( removeGems.size() > 0 )
+				if ( removeGems.get( ( removeGems.size() )-1 ).intValue() == extraQuality )
+				{
+					return "Remove " + extraQuality + "% from trade.";
+				}
 
 			// CALCULATE gemsToRemoveTotal
 			//
@@ -141,7 +142,7 @@ public class GemCalculatorMod
 			return checkBestRemoveGemsCombination( 0, removeGems, new ArrayList<>() );
 		}
 
-		return "";
+		return "You are missing " + (40 - qualityTotal) + "% quality.";
 	}
 
 	/**
@@ -154,127 +155,134 @@ public class GemCalculatorMod
 		ArrayList< ArrayList<Integer> > bestChangeToRemove = bestChange;
 		int sumTotal, altTotal;
 
-
-		sumTotal = removeGems.get( indexCursor ).intValue();
-		altTotal = 0;
-		bestGemsToRemove.add( removeGems.get( indexCursor ).intValue() );
-
-		if ( !complete )
+		if (removeGems.size() > 0)
 		{
-
-			// SUM ALL VALUES OF THE ARRAY STARTING FROM THE CURSOR
-			for ( int shifter = indexCursor+1 ; shifter < removeGems.size() && !complete ; shifter++)
-			{
-				sumTotal += removeGems.get( shifter ).intValue();
-
-				if ( sumTotal == extraQuality )
-				{
-					bestGemsToRemove.add(removeGems.get( shifter ).intValue());
-					complete = true;
-					break;
-				}
-
-				else if ( sumTotal < extraQuality )
-				{
-					bestGemsToRemove.add( removeGems.get( shifter ).intValue() );
-					bestChangeToRemove.add(bestGemsToRemove);
-				}
-
-				else if ( sumTotal > extraQuality )
-					break;
-			}
-
-
-			if (!complete)
-			{
-				// RESETS THE ARRAY bestGemsToRemove to the second test.
-				bestGemsToRemove = new ArrayList<>();
-				bestGemsToRemove.add( removeGems.get( indexCursor ).intValue() );
-			}
-
-			// ALTERNATE SUMS OF VALUES OF X + Y HAVING 
-			for ( int altShifter = indexCursor+1; altShifter < removeGems.size() && !complete ; altShifter++ )
-			{
-				altTotal = removeGems.get(indexCursor) + removeGems.get( altShifter ).intValue();
-
-				if ( altTotal == extraQuality )
-				{
-					bestGemsToRemove.add( removeGems.get( altShifter ).intValue() );
-					complete = true;
-					break;
-				}		
-			}
+			sumTotal = removeGems.get( indexCursor ).intValue();
+			altTotal = 0;
+			bestGemsToRemove.add( removeGems.get( indexCursor ).intValue() );
 
 			if ( !complete )
 			{
-				indexCursor++;
 
-				if (indexCursor == removeGems.size())
-					return "FIND BEST CHANGE";
-				else
-					// RECURSIVE CALL TO THIS METHOD.
-					checkBestRemoveGemsCombination( indexCursor, removeGems, bestChangeToRemove );
+				// SUM ALL VALUES OF THE ARRAY STARTING FROM THE CURSOR
+				for ( int shifter = indexCursor+1 ; shifter < removeGems.size() && !complete ; shifter++)
+				{
+					sumTotal += removeGems.get( shifter ).intValue();
+
+					if ( sumTotal == extraQuality )
+					{
+						bestGemsToRemove.add(removeGems.get( shifter ).intValue());
+						complete = true;
+						break;
+					}
+
+					else if ( sumTotal < extraQuality )
+					{
+						bestGemsToRemove.add( removeGems.get( shifter ).intValue() );
+						bestChangeToRemove.add(bestGemsToRemove);
+					}
+
+					else if ( sumTotal > extraQuality )
+						break;
+				}
+
+
+				if (!complete)
+				{
+					// RESETS THE ARRAY bestGemsToRemove to the second test.
+					bestGemsToRemove = new ArrayList<>();
+					bestGemsToRemove.add( removeGems.get( indexCursor ).intValue() );
+				}
+
+				// ALTERNATE SUMS OF VALUES OF X + Y HAVING 
+				for ( int altShifter = indexCursor+1; altShifter < removeGems.size() && !complete ; altShifter++ )
+				{
+					altTotal = removeGems.get(indexCursor) + removeGems.get( altShifter ).intValue();
+
+					if ( altTotal == extraQuality )
+					{
+						bestGemsToRemove.add( removeGems.get( altShifter ).intValue() );
+						complete = true;
+						break;
+					}			
+				}
+
+				if ( !complete )
+				{
+					indexCursor++;
+
+					if (indexCursor == removeGems.size())
+						return "You can't take any gems out and you will lose " + extraQuality + "% quality in this trade.";
+					else
+						// RECURSIVE CALL TO THIS METHOD.
+						checkBestRemoveGemsCombination( indexCursor, removeGems, bestChangeToRemove );
+				}
 			}
-		}
 
-		// IF A PERFECT CHANGE IS FOUND, THEN IS COMPLETE
-		// IF COMPLETE, MAKE bestGemsToRemoveString.
-		if (complete)
-		{
-			String bestGemsToRemoveString = new String();
 
-			for ( int y = 0 ; y < bestGemsToRemove.size() ; y++ )
+			// IF A PERFECT CHANGE IS FOUND, THEN IS COMPLETE
+			// IF COMPLETE, MAKE bestGemsToRemoveString.
+			if (complete)
 			{
-				if ( y == 0 )
-					bestGemsToRemoveString = "" + bestGemsToRemove.get( y ).intValue() + "%";
+				String bestGemsToRemoveString = new String();
 
-				else if ( y == bestGemsToRemove.size()-1 )
-					bestGemsToRemoveString = bestGemsToRemoveString.concat( " and " + bestGemsToRemove.get( y ).intValue() + "%" );
+				for ( int y = 0 ; y < bestGemsToRemove.size() ; y++ )
+				{
+					if ( y == 0 )
+						bestGemsToRemoveString = "" + bestGemsToRemove.get( y ).intValue() + "%";
 
-				else
-					bestGemsToRemoveString = bestGemsToRemoveString.concat( ", " + bestGemsToRemove.get( y ).intValue() + "%, ");
+					else if ( y == bestGemsToRemove.size()-1 )
+						bestGemsToRemoveString = bestGemsToRemoveString.concat( " and " + bestGemsToRemove.get( y ).intValue() + "% " );
+
+					else
+						bestGemsToRemoveString = bestGemsToRemoveString.concat( ", " + bestGemsToRemove.get( y ).intValue() + "%");
+				}
+
+				return "You can take " + bestGemsToRemove.size() +" gems out: " + bestGemsToRemoveString + ".";
 			}
 
-			return "You can take " + bestGemsToRemove.size() +" gems out: " + bestGemsToRemoveString + ".";
-		}
+			int bestChangeTotalIndex = -1;
+			int smallestDifference = extraQuality;
 
-		int bestChangeTotalIndex = -1;
-		int smallestDifference = extraQuality;
-
-		// CALCULATE bestChangeToRemove TOTAL
-		for ( int x = 0 ; x < bestChangeToRemove.size() ; x++ )
-		{
-			int changeTotal = 0;
-
-			for ( int y = 0 ; y < bestChangeToRemove.get(x).size(); y++ )
+			// CALCULATE bestChangeToRemove TOTAL
+			for ( int x = 0 ; x < bestChangeToRemove.size() ; x++ )
 			{
-				changeTotal += bestChangeToRemove.get(x).get(y).intValue();
+				int changeTotal = 0;
+
+				for ( int y = 0 ; y < bestChangeToRemove.get(x).size(); y++ )
+				{
+					changeTotal += bestChangeToRemove.get(x).get(y).intValue();
+				}
+
+				if ( (extraQuality - changeTotal) < smallestDifference )
+				{
+					smallestDifference = (extraQuality - changeTotal);
+					bestChangeTotalIndex = x;
+				}
+
 			}
 
-			if ( (extraQuality - changeTotal) < smallestDifference )
+			// MAKE bestChangeToRemoveString
+			if ( bestChangeToRemove.size() > 0 )
 			{
-				smallestDifference = (extraQuality - changeTotal);
-				bestChangeTotalIndex = x;
+				String bestChangeToRemoveString = new String();
+				for ( int y = 0 ; y < bestChangeToRemove.get( bestChangeTotalIndex ).size() ; y++ )
+				{
+					if ( y == 0 )
+						bestChangeToRemoveString = "" + bestChangeToRemove.get( bestChangeTotalIndex ).get( y ).intValue() + "%";
+
+					else if ( y == bestChangeToRemove.get(bestChangeTotalIndex).size()-1 )
+						bestChangeToRemoveString = bestChangeToRemoveString.concat( " and " + bestChangeToRemove.get( bestChangeTotalIndex ).get( y ).intValue() + "% " );
+
+					else
+						bestChangeToRemoveString = bestChangeToRemoveString.concat( ", " + bestChangeToRemove.get( bestChangeTotalIndex ).get( y ).intValue() + "%");
+				}
+
+				return "You can take " + bestChangeToRemoveString + "out and you will lose " + smallestDifference + "% quality in this trade.";
 			}
-
 		}
 
-		// MAKE bestChangeToRemoveString
-		String bestChangeToRemoveString = new String();
-
-		for ( int y = 0 ; y < bestChangeToRemove.get(bestChangeTotalIndex).size() ; y++ )
-		{
-			if ( y == 0 )
-				bestChangeToRemoveString = " " + bestChangeToRemove.get( bestChangeTotalIndex ).get( y ).intValue() + "% ";
-
-			else if ( y == bestChangeToRemove.get(bestChangeTotalIndex).size()-1 )
-				bestChangeToRemoveString.concat( "and " + bestChangeToRemove.get( bestChangeTotalIndex ).get( y ).intValue() + "% " );
-
-			else
-				bestChangeToRemoveString.concat( ", " + bestChangeToRemove.get( bestChangeTotalIndex ).get( y ).intValue() + "%, ");
-		}
-
-		return " You can take " + bestChangeToRemoveString + " but you will lose " + smallestDifference + "% quality in this trade.";
+		return "You can't take any gems out and you will lose " + extraQuality + "%.";
 	}
 
 	/**
@@ -298,27 +306,8 @@ public class GemCalculatorMod
 		int input = 0;
 		int size = 0;
 		boolean done = true;
-		
-		// TESTING HOW TO INPUT INT INTO AN ARRAYLIST OF INTEGERS
-		/*
-		Integer counter = 1;
-		System.out.print("Insert " + counter + " gem value: ");
-		calc.addQualityGems(in.nextInt());
-		in.close();
-		System.out.println(calc.getQualityGems());
-		 */
-
-		// TESTING HOW TO CONCAT STRINGS
-		/*
-		String a = "Obas ";
-		String b = "sio.";
-		String c = a + b;
-		a = a.concat(b);
-		System.out.println(c);
-		System.out.println(a);
-		 */
-
-		System.out.println("Welcome to POE Gemscutter's Prism Calculator: ");
+	
+		System.out.println("Welcome com POE Gemscutter's Prism Calculator: ");
 		System.out.print("Enter how many gems you have:");
 		size = in.nextInt();
 
@@ -335,10 +324,12 @@ public class GemCalculatorMod
 		in.close();
 
 		calc.sortQualityGems();
-		calc.getTwentyQualityGems();
+
+		calc.takeTwentyQualityGemsOut();
 		calc.calculateGemsQualityTotal();
 
 		System.out.println(calc.calculatePrismsTotal());
+
 		System.out.println(calc.getGemsToRemove());
 	}
 
