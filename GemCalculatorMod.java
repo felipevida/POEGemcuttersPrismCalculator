@@ -88,8 +88,6 @@ public class GemCalculatorMod
 	/**
 	 * This method will add to ArrayList removeGems values from ArrayList gemsQuality that are less equal than extraQuality.
 	 * Then it will check the best combination to avoid losing quality gems, if possible.
-	 * 
-	 * @param extraQuality
 	 */
 	public String getGemsToRemove()
 	{		
