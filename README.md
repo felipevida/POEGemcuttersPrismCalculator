@@ -9,7 +9,7 @@ In Path of Exile there is no money like gold, instead, the currency of the game 
 Whenever the total of quality gems in a trade reach 40% quality, a GCP is given as payment.
 
 Another important info is that a gem with 20% quality is equal to a GCP.
-THIS CONDITION STILL NEED TO BE IMPLEMENTED.
+THIS CONDITION STILL NEED TO BE IMPLEMENTED IN THE PRESENT CODE.
 
 # STUDY CASES
 
@@ -43,7 +43,6 @@ Based on these examples, I used JAVA to write a class called GemCalculator.
 Variables names and comments are yet to be added to explain the logic and how the program works on posted files.
 Beforehand I know that this is not the most efficient approach for this program, and it's open for improvement.
 
-Please open the .java files to test the first version, and remember that there are no error validations, neither conditions for Gems input of 20%.
+Please open the .java files to test the first version, and remember that there are NO input validations, neither conditions for Gems input of 20%.
 
-"If necesseray, and I believe it is, we can restart from scratch".
-
+"If necesseray, and I believe it is, we can restart from scratch, I do have some extra code that it's posted too".
