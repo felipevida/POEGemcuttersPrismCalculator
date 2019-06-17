@@ -1,3 +1,4 @@
+[![Board Status](https://dev.azure.com/mari0272/75b6629e-9df2-478c-8696-1757b7fdeca1/2d08c384-9021-49c5-adc1-59f9432d1146/_apis/work/boardbadge/7472daa1-8ca3-4912-b59d-d8fee056729d)](https://dev.azure.com/mari0272/75b6629e-9df2-478c-8696-1757b7fdeca1/_boards/board/t/2d08c384-9021-49c5-adc1-59f9432d1146/Microsoft.RequirementCategory)
 # POEGemcuttersPrismCalculator
 
 # INFO
